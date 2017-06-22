@@ -3,5 +3,60 @@
 {% load staticfiles %}
 
 {% block body %}
-<div>Atom is a great text editor!</div>
+<!--<div>Atom is a great text editor!</div>-->
+<!--https://stackoverflow.com/questions/20312922/change-image-src-based-on-ng-click-index-angularjs-->
+<div class="content-wrapper">
+    {% verbatim %}
+        <div class="imageview" ng-app="viewApp" ng-controller="viewController">
+            
+            <div class="imageview-hero"><img src="{{viewImg}}" alt="Hello World!"></div>
+            <div>Input a rating for this image.</div>
+            <form>
+                <div class="row">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option1"> 1
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option2"> 2
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option3"> 3
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option4"> 4
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option5"> 5
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option6"> 6
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option7"> 7
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option8"> 8
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option9"> 9
+      </label>
+                        <label class="btn btn-primary">
+        <input type="radio" name="options" id="option10"> 10
+      </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center"> 
+                    <div class="input-group-btn">
+        <button class="btn btn-secondary" type="button" ng-click="nextImg()">Submit</button>
+      </div>
+                </div>
+                </div>
+                <br>
+
+            </form>
+        </div>
+    {% endverbatim %}
+    </div>
 {% endblock %}

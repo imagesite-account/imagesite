@@ -1,0 +1,29 @@
+.imageview {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.imageview .imageview-hero {
+    width: 70%;
+    max-width: 1000px;
+    max-height: 800px;
+    min-height: 100px;
+    margin-top: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
+    /*flex-grow: 20;*/
+    /*background-position: center;
+    background-size: contain;
+    background-image: url(/static/svg/hero.svg);
+    background-repeat: no-repeat;*/
+}
+
+.input-group-btn{
+    display: inline-block;
+}
