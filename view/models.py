@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -21,7 +22,7 @@ class ViewData(models.Model):
     url = models.URLField(blank=True, null=True)
     num_images = models.IntegerField(blank=True, null=True)
     tags = models.TextField(blank=True, null=True)
-    date_created = models.DateTimeField(blank=True, null=True)
+    date_created = models.DateTimeField(blank=True, null=True, default=timezone.now)
     date_modified = models.DateTimeField(blank=True, null=True)
     owner = models.TextField(blank=True, null=True)
     extra_1 = models.TextField(blank=True, null=True)
@@ -31,5 +32,7 @@ class ViewData(models.Model):
         return self.name
 
     class Meta:
-        managed = False
+        # Set managed = True
+        # https://stackoverflow.com/a/35494384
+        managed = True
         db_table = 'view_data'
