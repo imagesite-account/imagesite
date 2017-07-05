@@ -7,6 +7,10 @@ import django
 django.setup()
 from view.models import ViewData
 
+
+EMPTY_ALBUM_KEY = '__empty_album__'
+
+
 def get_client():
     imgur_key_file = 'keys-imgur.txt'
     with open(imgur_key_file) as f:
