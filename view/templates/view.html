@@ -6,11 +6,15 @@
 <!--<div>Atom is a great text editor!</div>-->
 <!--https://stackoverflow.com/questions/20312922/change-image-src-based-on-ng-click-index-angularjs-->
 <div class="content-wrapper">
+<!--    {{album_id}}-->
     {% verbatim %}
+    
         <div class="imageview" ng-app="viewApp" ng-controller="viewController">
-            
+            {{all}}
+<!--            {{api_url}}-->
+            {{images}}
             <div class="imageview-hero"><img src="{{viewImg}}" alt="Hello World!"></div>
-            <div>Input a rating for this image.</div>
+            <div class="imageview-description">Input a rating for this image.</div>
             <form>
                 <div class="row">
                     <div class="btn-group" data-toggle="buttons">

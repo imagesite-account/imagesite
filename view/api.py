@@ -27,3 +27,6 @@ def api_get_album(request, album_id):
     serializer = ViewDataSerializer(album)
 
     return JSONResponse(serializer.data)
+
+
+################################

@@ -3,15 +3,17 @@ import json
 from django.http import HttpResponse, QueryDict
 from django.shortcuts import render
 
+from master import GLOBAL_CURRENT_HOST
 from album import EMPTY_ALBUM_KEY
 from .api import api_get_album
 
-def index(request):
 
+def index(request, album_id = 'VBrKp'):
+    vars_dict = {'album_id': album_id, 'global_current_host': GLOBAL_CURRENT_HOST}
     if request.method == "POST":
-        return render(request, 'view.html')
+        return render(request, 'view.html', vars_dict)
     else:
-        return render(request, 'view.html')
+        return render(request, 'view.html', vars_dict)
 
 
 # def view_album(request, album_id=EMPTY_ALBUM_KEY):

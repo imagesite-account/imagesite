@@ -10,7 +10,10 @@ class ViewDataSerializer(serializers.ModelSerializer):
     # my_field = serializers.SerializerMethodField('successful_submit')
     # def successful_submit(self, success):
     #     return success == 1
+    image_list = serializers.ListField(source='get_image_list')
 
     class Meta:
         model = ViewData
-        fields = '__all__'
+        fields = ('image_list', 'labels',)
+        read_only_fields = ('image_list',)
+        # fields = '__all__'
