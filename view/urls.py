@@ -7,6 +7,7 @@ from . import views, api
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^api/0/(?P<album_id>[\w|\W]+)/$', api.api_get_album),
+    url(r'^api/1/(?P<album_id>[\w|\W]+)/$', api.api_submit_rating),
     url(r'^(?P<album_id>[\w|\W]+)/$', views.index, name='index'),
     # url(r'^album/(?P<album_id>[\w|\W]+)/$', views.view_album),
 

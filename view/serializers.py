@@ -17,3 +17,7 @@ class ViewDataSerializer(serializers.ModelSerializer):
         fields = ('image_list', 'labels',)
         read_only_fields = ('image_list',)
         # fields = '__all__'
+
+
+class InterimMessagesSerializer(serializers.Serializer):
+    messages = serializers.DictField()

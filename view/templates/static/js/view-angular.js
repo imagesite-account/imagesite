@@ -19,12 +19,16 @@ app.config(['$httpProvider', function($httpProvider) {
 }]);
 
 app.controller('viewController', function($scope, $http) {
-  $scope.api_url = global_current_host + '/album/api/0/' + album_id;
+  // Must append slash when submtting POST request to API
+  $scope.api_image_url = global_current_host + '/album/api/0/' + album_id + '/';
+  $scope.api_submit_url = global_current_host + '/album/api/1/' + album_id + '/';
   $scope.all = 0;
   $scope.images = ['http://i.imgur.com/kpXKVoo.png'];
   $scope.labels = [];
+
+  // $scope.interim_response = {'init': 'init'};
   $http({
-      url: $scope.api_url,
+      url: $scope.api_image_url,
       method: 'GET',
   }).
   then(function(response) {
@@ -40,9 +44,35 @@ app.controller('viewController', function($scope, $http) {
   $scope.viewImg = $scope.initImg();
   image_counter = 0;
   $scope.nextImg = function () {
-    $scope.viewImg = 'https://i.imgur.com/uWc0eACm.jpg';
+    // $scope.viewImg = 'https://i.imgur.com/uWc0eACm.jpg';
     image_counter++;
-    $scope.viewImg = $scope.images[image_counter];
+    var interim_submission = {'rating': 5, 'image_id': $scope.images[image_counter], }
+    if (image_counter < $scope.images.length - 1){
+      $http({
+          url: $scope.api_submit_url,
+          method: 'POST',
+          data: interim_submission,
+          // data: '000000',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      }).
+      then(function(response) {
+          $scope.interim_response = response.data;
+          // alert(JSON.stringify($scope.interim_response['messages']));
+          // alert(10);
+
+      });
+      // $scope.interim_response = JSON.parse(JSON.stringify($scope.interim_response));
+      // alert(JSON.stringify($scope.interim_response));
+      if (true === true){
+        // alert('success');
+        image_counter++;
+      }
+
+      $scope.viewImg = $scope.images[image_counter];
+    }else{
+      $scope.viewImg = endscreen_link;
+    }
+
   };
 
 });
