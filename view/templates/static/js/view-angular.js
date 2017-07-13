@@ -45,7 +45,8 @@ app.controller('viewController', function($scope, $http) {
   image_counter = 0;
   $scope.nextImg = function () {
     // $scope.viewImg = 'https://i.imgur.com/uWc0eACm.jpg';
-    image_counter++;
+    // image_counter++;
+    // alert(image_counter);
     var interim_submission = {'rating': 5, 'image_id': $scope.images[image_counter], }
     if (image_counter < $scope.images.length - 1){
       $http({
@@ -59,14 +60,14 @@ app.controller('viewController', function($scope, $http) {
           $scope.interim_response = response.data;
           // alert(JSON.stringify($scope.interim_response['messages']));
           // alert(10);
-
+          if ($scope.interim_response['messages']['success'] === true){
+            // alert('success');
+            image_counter++;
+          }
       });
       // $scope.interim_response = JSON.parse(JSON.stringify($scope.interim_response));
       // alert(JSON.stringify($scope.interim_response));
-      if (true === true){
-        // alert('success');
-        image_counter++;
-      }
+
 
       $scope.viewImg = $scope.images[image_counter];
     }else{
