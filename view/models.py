@@ -2,6 +2,7 @@ from random import shuffle
 
 from django.db import models
 from django.utils import timezone
+from django.apps import apps
 
 # Create your models here.
 
@@ -48,6 +49,8 @@ class ViewData(models.Model):
     images = models.TextField(blank=True, null=True)
     init_message = models.TextField(blank=True, null=True)
 
+    _DATABASE = 'default'
+
     def __str__(self):
         return self.name
 
@@ -62,3 +65,55 @@ class ViewData(models.Model):
         # https://stackoverflow.com/a/35494384
         managed = True
         db_table = 'view_data'
+
+
+######################################################
+from django.db import connections as conns
+
+from master import check_sql, format_album_id
+
+
+# Create or fetch a dynamic django model.
+def create_or_get_model(album_id):
+    album_id = format_album_id(album_id)
+    table_name = album_id  # name of the table created by sql
+    model_name = 'album_%s' % (album_id,)
+    try:
+        model = apps.get_registered_model('view', model_name)
+        return model
+    except LookupError:
+        pass
+
+    print('[View/models.py/create_or_get_model] no model exists for model %s, creating one:' % model_name)
+
+    model = None
+    try:
+        # Either the db table + model are both created,
+        # Or only db table is created and model fails,
+        # Or everything fails.
+        album_id = check_sql(album_id)
+        with conns['album_image_data'].cursor() as c:
+            c.execute('''CREATE TABLE IF NOT EXISTS {table_name}
+                        (rating INT, datetime TEXT, image_id TEXT, extra TEXT)
+                        '''
+                      .format(table_name=album_id))
+
+        class Meta:
+            managed = True
+            db_table = table_name
+
+        attrs = {
+            'rating': models.CharField(max_length=200),
+            'datetime': models.CharField(max_length=200),
+            'image_id': models.CharField(max_length=200),
+            'extra': models.CharField(max_length=200),
+            '_DATABASE': 'album_image_data',
+            '__module__': 'view.models',
+            'Meta': Meta
+        }
+        model = type(str(model_name), (models.Model,), attrs)
+    except Exception as ex:
+        print('[View/models.py/create_or_get_model] Error:', ex)
+
+
+    return model

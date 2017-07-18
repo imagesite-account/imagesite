@@ -6,11 +6,13 @@ from urllib.request import unquote
 from django.http import HttpResponse, QueryDict
 from django.db import connections as conns
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 from rest_framework.renderers import JSONRenderer
 
-from .models import ViewData
+from .models import ViewData, create_or_get_model
 from .serializers import ViewDataSerializer, InterimMessagesSerializer
 
+from master import check_sql
 
 def process_request(request):
     if 'application/json' in request.META['CONTENT_TYPE']:
@@ -100,17 +102,30 @@ def api_submit_rating(request, album_id): # album_id, rating in request
     #     # Return "failed"
     #     pass
 
+    #
+    # try:
+    #     album_id = check_sql(album_id)
+    #     with conns['album_image_data'].cursor() as c:
+    #         c.execute('''CREATE TABLE IF NOT EXISTS {table_name}
+    #                     (rating INT, datetime TEXT, extra TEXT)
+    #                     '''
+    #                   .format(table_name=album_id))
+    #     success = True
+    #     print('[View/api.py/api_submit_rating] Added db table', album_id)
+    # except Exception as ex:
+    #     print('[View/api.py/api_submit_rating] Error:', ex)
+    #     success = True
 
-    try:
-        with conns['album_image_data'].cursor() as c:
-            c.execute('''CREATE TABLE IF NOT EXISTS %s
-                        (rating INT, datetime TEXT)
-                        ''',
-                      [album_id, ])
-        success = True
-    except Exception as ex:
-        print('[api_submit_rating] Error:', ex)
-        success = True
+    Album_Model = create_or_get_model(album_id)
+    if Album_Model is None:
+        print('[view/api.py/api_submit_rating] Error occured trying to create or get model for album_id:', album_id)
+        success = False
+    else:
+        album = Album_Model(rating=rating, datetime=str(timezone.now()), image_id=image_id)
+        album.save()
+        print('[view/api.py/api_submit_rating] Successfully added rating for {album_id}!'.format(album_id=album_id))
+        print('[view/api.py/api_submit_rating] Rating:', rating, album.rating)
+
     # TODO: Return True/false as a response if successful/unsuccessful in storing rating
     message_dict = {'success': success, 'image': image_id, 'additional_message:': ''}
     im_data = InterimMessagesContent(message_dict)
