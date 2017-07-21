@@ -11,6 +11,7 @@ class ViewDataSerializer(serializers.ModelSerializer):
     # def successful_submit(self, success):
     #     return success == 1
     image_list = serializers.ListField(source='get_image_list')
+    labels = serializers.ListField(source='get_labels')
 
     class Meta:
         model = ViewData

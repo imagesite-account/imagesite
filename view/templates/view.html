@@ -15,8 +15,15 @@
             {{images}}
             <div class="imageview-hero"><img ng-src="{{viewImg}}" alt="Hello World!"></div>
             <div class="imageview-description">Input a rating for this image.</div>
-            <form>
+            <form novalidate>
                 <div class="row">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary" ng-repeat="label in labels track by $index">
+<!--                            {{image.rating}}-->
+                            <input type="radio" name="rating" id="option_{{$index}}" ng-model="image.rating" ng-value="{{$index}}"> {{label.name}}
+                        </label>
+                    </div>
+<!--
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary">
         <input type="radio" name="options" id="option1"> 1
@@ -49,17 +56,19 @@
         <input type="radio" name="options" id="option10"> 10
       </label>
                     </div>
+-->
                 </div>
                 <div class="row">
                     <div class="col-md-12 text-center"> 
                     <div class="input-group-btn">
-        <button class="btn btn-secondary" type="button" ng-click="nextImg()">Submit</button>
+        <button class="btn btn-secondary" type="button" ng-click="submit()">Submit</button>
       </div>
                 </div>
                 </div>
                 <br>
 
             </form>
+            <pre>image = {{image | json}}</pre>
         </div>
     {% endverbatim %}
     </div>

@@ -22,6 +22,6 @@ def check_sql(table_name):
     return ''.join(character for character in table_name if is_acceptable_char(character))
 
 
-def format_album_id(album_id):
-    album_id = album_id if '/' not in album_id else album_id.split('/')[-1]
-    return album_id
+def format_id(item_id):
+    item_id = item_id if '/' not in item_id else item_id.split('/')[-1]
+    return item_id

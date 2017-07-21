@@ -26,6 +26,8 @@ app.controller('viewController', function($scope, $http) {
   $scope.images = ['http://i.imgur.com/kpXKVoo.png'];
   $scope.labels = [];
 
+  $scope.image = {rating: -1};
+
   // $scope.interim_response = {'init': 'init'};
   $http({
       url: $scope.api_image_url,
@@ -34,7 +36,10 @@ app.controller('viewController', function($scope, $http) {
   then(function(response) {
       $scope.all = response.data;
       $scope.images = $scope.all['image_list'];
-      $scope.labels = $scope.all['labels'];
+      for (var i = 0; i < $scope.all['labels'].length; i++){
+        $scope.labels.push({name: $scope.all['labels'][i]});
+      }
+      // $scope.labels = $scope.all['labels'];
   });
 
   $scope.initImg = function () {
@@ -43,11 +48,11 @@ app.controller('viewController', function($scope, $http) {
   };
   $scope.viewImg = $scope.initImg();
   image_counter = 0;
-  $scope.nextImg = function () {
+  $scope.nextImg = function (rating) {
     // $scope.viewImg = 'https://i.imgur.com/uWc0eACm.jpg';
     // image_counter++;
     // alert(image_counter);
-    var interim_submission = {'rating': 5, 'image_id': $scope.images[image_counter], }
+    var interim_submission = {'rating': rating, 'image_id': $scope.images[image_counter], }
     if (image_counter < $scope.images.length - 1){
       $http({
           url: $scope.api_submit_url,
@@ -74,6 +79,17 @@ app.controller('viewController', function($scope, $http) {
       $scope.viewImg = endscreen_link;
     }
 
+
+
   };
+
+  $scope.submit = function (){
+    // http://jsfiddle.net/mrajcok/7MhLd/
+    // https://stackoverflow.com/questions/13714884/difficulty-with-ng-model-ng-repeat-and-inputs
+    // $scope.image = {2:2};
+    // alert(JSON.stringify($scope.image));
+    $scope.nextImg(7);
+  };
+
 
 });

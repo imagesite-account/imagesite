@@ -12,7 +12,7 @@ from rest_framework.renderers import JSONRenderer
 from .models import ViewData, create_or_get_model
 from .serializers import ViewDataSerializer, InterimMessagesSerializer
 
-from master import check_sql
+from master import check_sql, format_id
 
 def process_request(request):
     if 'application/json' in request.META['CONTENT_TYPE']:
@@ -80,22 +80,34 @@ def api_get_album(request, album_id):
 @csrf_exempt
 def api_submit_rating(request, album_id): # album_id, rating in request
     success = False
-    current_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    # current_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     # image_id = request.POST.get('image_id', 'Empty')
     # rating = request.POST.get('rating', '-1')
     #
+    if not request.POST.dict().items():
+        message_dict = {'success': success, 'image': '',
+                        'additional_message:': 'You haven\'t passed any rating for the API to process!'}
+        im_data = InterimMessagesContent(message_dict)
+        serializer = InterimMessagesSerializer(im_data)
+        return JSONResponse(serializer.data)
+
     req_str = ''
     for key, val in request.POST.dict().items():
         req_str = key
         break
 
-    req_dict = json.loads(req_str)
+    print('[view/api.py/api_submit_rating] request.POST.dict():', request.POST.dict())
+    print('[view/api.py/api_submit_rating] req_str:', str(req_str).strip())
+    req_dict = json.loads(str(req_str).strip())
+    print('[view/api.py/api_submit_rating] req_dict:', req_dict)
 
     image_id = req_dict['image_id']
     rating = req_dict['rating']
 
-    print('[api_submit_rating]:', request.POST.dict())
+    image_id = format_id(image_id)
+
+
     print(image_id, rating)
 
     # if album_id != album_id_:
@@ -125,6 +137,7 @@ def api_submit_rating(request, album_id): # album_id, rating in request
         album.save()
         print('[view/api.py/api_submit_rating] Successfully added rating for {album_id}!'.format(album_id=album_id))
         print('[view/api.py/api_submit_rating] Rating:', rating, album.rating)
+        success = True
 
     # TODO: Return True/false as a response if successful/unsuccessful in storing rating
     message_dict = {'success': success, 'image': image_id, 'additional_message:': ''}

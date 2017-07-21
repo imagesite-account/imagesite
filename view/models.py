@@ -60,6 +60,15 @@ class ViewData(models.Model):
         shuffle(image_list)
         return image_list
 
+    def get_labels(self):
+        labels = self.labels
+        if not labels or ',' not in labels:
+            labels = [i for i in range(10)]
+        else:
+            labels = labels.split(',')
+
+        return labels
+
     class Meta:
         # Set managed = True
         # https://stackoverflow.com/a/35494384
@@ -70,12 +79,12 @@ class ViewData(models.Model):
 ######################################################
 from django.db import connections as conns
 
-from master import check_sql, format_album_id
+from master import check_sql, format_id
 
 
 # Create or fetch a dynamic django model.
 def create_or_get_model(album_id):
-    album_id = format_album_id(album_id)
+    album_id = format_id(album_id)
     table_name = album_id  # name of the table created by sql
     model_name = 'album_%s' % (album_id,)
     try:
@@ -88,6 +97,10 @@ def create_or_get_model(album_id):
 
     model = None
     try:
+        # Unfortunately, have to use raw sql to create
+        # db table - not much built in support for
+        # dynamic modelling.
+        #
         # Either the db table + model are both created,
         # Or only db table is created and model fails,
         # Or everything fails.
