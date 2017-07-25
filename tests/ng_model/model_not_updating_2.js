@@ -25,15 +25,8 @@ app.controller('viewController', function($scope, $http) {
   $scope.all = 0;
   $scope.images = ['http://i.imgur.com/kpXKVoo.png'];
   $scope.labels = [];
-  $scope.messages = {
-    default: 'Input a rating for this image.',
-    norating: 'You cannot submit until you have input a rating.',
-    serverfault: 'No response from server.',
-    custom: '',
-  }
 
-  $scope.disp_message = $scope.messages.default;
-  $scope.image = {rating: false};
+  $scope.image = {rating: -1};
 
   // $scope.interim_response = {'init': 'init'};
   $http({
@@ -60,8 +53,6 @@ app.controller('viewController', function($scope, $http) {
     // image_counter++;
     // alert(image_counter);
     var interim_submission = {'rating': rating, 'image_id': $scope.images[image_counter], }
-    
-
     if (image_counter < $scope.images.length - 1){
       $http({
           url: $scope.api_submit_url,
@@ -88,6 +79,8 @@ app.controller('viewController', function($scope, $http) {
       $scope.viewImg = endscreen_link;
     }
 
+
+
   };
 
   $scope.submit = function (){
@@ -96,15 +89,7 @@ app.controller('viewController', function($scope, $http) {
     // $scope.image = {2:2};
     // alert(JSON.stringify($scope.image));
 
-    if ($scope.image.rating === false){
-      $scope.disp_message = $scope.messages.norating;
-    }else{
-      $scope.nextImg($scope.image.rating);
-      $scope.disp_message = $scope.messages.default;
-      $scope.image.rating = false;
-    }
-
-
+    $scope.nextImg($scope.image.rating);
   };
 
 

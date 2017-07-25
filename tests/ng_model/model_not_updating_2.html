@@ -1,20 +1,56 @@
-{% extends 'view-wrapper.html' %}
 
-{% load staticfiles %}
 
-{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Image site</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="model_not_updating_2.css">
+    
+    
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    
+    <script src="master.js"></script>
+    <script>
+        global_current_host = 'http://127.0.0.1:8000';
+        album_id = 'VBrKp';
+    </script>
+
+    
+    <script src="model_not_updating_2.js"></script>
+
+
+</head>
+
+<body>                                                                    
+    
+
+
 <!--<div>Atom is a great text editor!</div>-->
 <!--https://stackoverflow.com/questions/20312922/change-image-src-based-on-ng-click-index-angularjs-->
 <div class="content-wrapper">
-<!--    {{album_id}}-->
-    {% verbatim %}
+<!--    VBrKp-->
+    
     
         <div class="imageview" ng-app="viewApp" ng-controller="viewController">
-<!--            {{all}}-->
+            {{all}}
 <!--            {{api_url}}-->
-<!--            {{images}}-->
+            {{images}}
             <div class="imageview-hero"><img ng-src="{{viewImg}}" alt="Hello World!"></div>
-            <div class="imageview-description">{{disp_message}}</div>
+            <div class="imageview-description">Input a rating for this image.</div>
             <form novalidate>
                 <div class="row">
 <!--
@@ -25,7 +61,7 @@
                         </label>
                     </div>
 -->
-                    <div class="btn-group">
+                    <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary">
         <input type="radio" name="options" id="option1" ng-model="image.rating" ng-value="1"> 1
       </label>
@@ -66,10 +102,15 @@
                 </div>
                 </div>
                 <br>
-
+<pre>ratings = {{image.rating | json}}</pre>
             </form>
-<!--            <pre>ratings = {{image.rating | json}}</pre>-->
+            
         </div>
-    {% endverbatim %}
+    
     </div>
-{% endblock %}
+
+
+
+</body>
+
+</html>
