@@ -87,7 +87,7 @@ def api_submit_rating(request, album_id): # album_id, rating in request
     #
     if not request.POST.dict().items():
         message_dict = {'success': success, 'image': '',
-                        'additional_message:': 'You haven\'t passed any rating for the API to process!'}
+                        'additional_message': 'You haven\'t passed any rating for the API to process!'}
         im_data = InterimMessagesContent(message_dict)
         serializer = InterimMessagesSerializer(im_data)
         return JSONResponse(serializer.data)

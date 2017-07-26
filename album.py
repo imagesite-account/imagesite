@@ -7,6 +7,7 @@ import django
 django.setup()
 from view.models import ViewData
 
+from master import format_id
 
 EMPTY_ALBUM_KEY = '__empty_album__'
 
@@ -37,16 +38,54 @@ if __name__ == '__main__':
     # print(type(client))
     print(len(sys.argv))
     if len(sys.argv) < 3:
-        print('Not enough arguments; please enter an action.')
-        print('Options: \n'
-              'add_album [album_id], '
-              'remove_album [album_id]')
+        client = get_client()
+        '''
+        Enter album info fields here!!
+
+        Required fields: [album_id]
+        Auto-generated fields: [url, album_image_links, version]
+        Optional fields: [name, num_images, tags, ]
+        '''
+        #
+
+        # Ex. http://imgur.com/a/FKsUu, https://imgur.com/a/FKsUu, FKsUu
+        album_id = 'FKsUu'
+        album_id = format_id(album_id)
+
+        # Lazy exception handling
+        if not album_id:
+            raise ValueError('Invalid album id!')
+
+        try:
+            album_image_links = get_album_image_links(client, album_id)
+            album_image_links_ = ','.join(album_image_links)
+        except Exception as ex:
+            print('Exception:', ex)
+            raise ValueError('Probably invalid album id.')
+
+        album_url = 'https://imgur.com/a/' + str(album_id)
+
+        # Version: 1, 2, etc
+        # Name: one word; "cats", "cars", "computers" etc
+        # num_images: self-explanatory
+        # tags: multiple word separated by comma: "colorful, boring, long" etc
+
+        version = 1
+        name = ''
+        num_images = 0
+        tags = ''
+
+        album = ViewData.objects.create(album_id=album_id, url=album_url, images=album_image_links_,
+                                        version=version, name=name, num_images=num_images, tags=tags)
+        album.save()
+
     else:
-        print('Action:', sys.argv[1])
+        # print('Action:', sys.argv[1])
         client = get_client()
         if sys.argv[1] == 'add_album':
             # Viewdata.id
             album_id = sys.argv[2]
+            album_id = format_id(album_id)
 
             # Viewdata.extra_1
             album_image_links = get_album_image_links(client, album_id)
@@ -55,8 +94,8 @@ if __name__ == '__main__':
             # python manage.py migrate --run-syncdb to start
             # https://stackoverflow.com/a/37799885
 
-            album_url = 'http://imgur.com/a/' + str(album_id)
-            album = ViewData.objects.create(album_id=album_id, url=album_url, extra_1=album_image_links_)
+            album_url = 'https://imgur.com/a/' + str(album_id)
+            album = ViewData.objects.create(album_id=album_id, url=album_url, images=album_image_links_)
             album.save()
 
             print(album_image_links_)

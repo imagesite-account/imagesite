@@ -23,12 +23,13 @@ app.controller('viewController', function($scope, $http) {
   $scope.api_image_url = global_current_host + '/album/api/0/' + album_id + '/';
   $scope.api_submit_url = global_current_host + '/album/api/1/' + album_id + '/';
   $scope.all = 0;
-  $scope.images = ['http://i.imgur.com/kpXKVoo.png'];
+  $scope.images = ['http://i.imgur.com/DLv7QiM.png'];
   $scope.labels = [];
   $scope.messages = {
     default: 'Input a rating for this image.',
     norating: 'You cannot submit until you have input a rating.',
     serverfault: 'No response from server.',
+    end: 'There are no more images to rate.',
     custom: '',
   }
 
@@ -47,20 +48,26 @@ app.controller('viewController', function($scope, $http) {
         $scope.labels.push({name: $scope.all['labels'][i]});
       }
       // $scope.labels = $scope.all['labels'];
+      // alert('Inside api call:' + $scope.images);
+      $scope.viewImg = $scope.initImg();
   });
-
+  // alert('Outside api call:' + $scope.images);
+  image_counter = 0;
   $scope.initImg = function () {
     // return 'https://i.imgur.com/2B2JLbpm.jpg';
+    // alert('Inside initImg:' + $scope.images);
+    image_counter++;
     return $scope.images[0];
   };
-  $scope.viewImg = $scope.initImg();
-  image_counter = 0;
+  // $scope.viewImg = $scope.initImg();
+
   $scope.nextImg = function (rating) {
     // $scope.viewImg = 'https://i.imgur.com/uWc0eACm.jpg';
     // image_counter++;
     // alert(image_counter);
-    var interim_submission = {'rating': rating, 'image_id': $scope.images[image_counter], }
-    
+    // alert(JSON.stringify({'rating': rating, 'image_id': $scope.images[image_counter], image_counter}));
+    var interim_submission = {'rating': rating, 'image_id': $scope.images[image_counter-1], }
+
 
     if (image_counter < $scope.images.length - 1){
       $http({
@@ -77,15 +84,41 @@ app.controller('viewController', function($scope, $http) {
           if ($scope.interim_response['messages']['success'] === true){
             // alert('success');
             image_counter++;
+          }else{
+            $scope.messages.custom = $scope.interim_response['messages']['additional_message'];
+            $scope.disp_message = $scope.messages.custom;
           }
       });
       // $scope.interim_response = JSON.parse(JSON.stringify($scope.interim_response));
       // alert(JSON.stringify($scope.interim_response));
-
-
       $scope.viewImg = $scope.images[image_counter];
-    }else{
+      $scope.disp_message = $scope.messages.default;
+    }else if (image_counter === $scope.images.length - 1){
       $scope.viewImg = endscreen_link;
+      $http({
+          url: $scope.api_submit_url,
+          method: 'POST',
+          data: interim_submission,
+          // data: '000000',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      }).
+      then(function(response) {
+          $scope.interim_response = response.data;
+          // alert(JSON.stringify($scope.interim_response['messages']));
+          // alert(10);
+          if ($scope.interim_response['messages']['success'] === true){
+            // alert('success');
+            image_counter++;
+          }else{
+            $scope.messages.custom = $scope.interim_response['messages']['additional_message'];
+            $scope.disp_message = $scope.messages.custom;
+          }
+      });
+      $scope.disp_message = $scope.messages.end;
+    }else{
+      image_counter++;
+      $scope.viewImg = endscreen_link;
+      $scope.disp_message = $scope.messages.end;
     }
 
   };
@@ -100,7 +133,7 @@ app.controller('viewController', function($scope, $http) {
       $scope.disp_message = $scope.messages.norating;
     }else{
       $scope.nextImg($scope.image.rating);
-      $scope.disp_message = $scope.messages.default;
+
       $scope.image.rating = false;
     }
 
