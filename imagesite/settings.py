@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'view',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -144,4 +145,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     'templates/static',
     'view/templates/static',
+    'home/templates/static',
 ]
