@@ -7,6 +7,8 @@ IMAGE_ERR_CODES = {
     1: 'Unable to save rating to db. Please try resubmitting.'
 }
 
+contact = 'your.email@domain.com'
+
 
 acceptable_chars = '[]_-'
 def is_acceptable_char(character):

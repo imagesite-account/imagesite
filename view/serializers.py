@@ -15,9 +15,13 @@ class ViewDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ViewData
-        fields = ('image_list', 'labels',)
+        fields = ('album_id', 'name', 'init_message', 'image_list', 'labels',)
         read_only_fields = ('image_list',)
         # fields = '__all__'
+
+
+class MultipleViewDataSerializer(serializers.Serializer):
+    albums = ViewDataSerializer(many=True)
 
 
 class InterimMessagesSerializer(serializers.Serializer):

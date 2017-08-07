@@ -23,16 +23,16 @@ from django.apps import apps
 # https://stackoverflow.com/questions/10325683/can-i-read-and-write-to-a-sqlite-database-concurrently-from-multiple-connections
 class ViewData(models.Model):
     album_id = models.TextField(primary_key=True, blank=True, null=False)
-    name = models.TextField(blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    version = models.IntegerField(blank=True, null=True)
+    name = models.TextField(blank=True, null=True, default='')
+    url = models.URLField(blank=True, null=True, default='')
+    version = models.IntegerField(blank=True, null=True, default=0)
 
-    num_images = models.IntegerField(blank=True, null=True)
-    tags = models.TextField(blank=True, null=True)
+    num_images = models.IntegerField(blank=True, null=True, default=0)
+    tags = models.TextField(blank=True, null=True, default='')
     date_created = models.DateTimeField(blank=True, null=True, default=timezone.now)
-    date_modified = models.DateTimeField(blank=True, null=True)
-    owner = models.TextField(blank=True, null=True)
-    num_labels = models.IntegerField(blank=True, null=True)
+    date_modified = models.DateTimeField(blank=True, null=True, default=timezone.now)
+    owner = models.TextField(blank=True, null=True, default='')
+    num_labels = models.IntegerField(blank=True, null=True, default=0)
 
     # rating_0 = models.IntegerField(blank=True, null=True)
     # rating_1 = models.IntegerField(blank=True, null=True)
@@ -45,9 +45,9 @@ class ViewData(models.Model):
     # rating_8 = models.IntegerField(blank=True, null=True)
     # rating_9 = models.IntegerField(blank=True, null=True)
 
-    labels = models.TextField(blank=True, null=True)
-    images = models.TextField(blank=True, null=True)
-    init_message = models.TextField(blank=True, null=True)
+    labels = models.TextField(blank=True, null=True, default='')
+    images = models.TextField(blank=True, null=True, default='')
+    init_message = models.TextField(blank=True, null=True, default='')
 
     _DATABASE = 'default'
 
@@ -68,6 +68,16 @@ class ViewData(models.Model):
             labels = labels.split(',')
 
         return labels
+
+    def get_basic_info(self):
+        info = {
+            'album_id': self.album_id,
+            'name': self.name,
+            'init_message': self.init_message,
+        }
+
+        return info
+
 
     class Meta:
         # Set managed = True

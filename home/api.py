@@ -10,7 +10,9 @@ from rest_framework.renderers import JSONRenderer
 
 from .models import ViewData
 
+from view.api import *
+from view.serializers import MultipleViewDataSerializer
+
 from master import check_sql, format_id
 
-from view.api import JSONResponse, api_get_album
 

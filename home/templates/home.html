@@ -3,7 +3,76 @@
 {% load staticfiles %}
 
 {% block body %}
-<div class="content-wrapper">
-    Hello World!
+<div class="content-wrapper center-block">
+<!--    Hello World!-->
+    
+    {% verbatim %}
+    <div class="albumview text-center" ng-app="homeApp" ng-controller="homeController">
+        <div class="albumview-header">
+            <h3>Select a set of images to rate below.</h3>
+        </div>
+<!--        http://imgur.com/a/yfwjZ-->
+        <div class="row albumview-row">
+            <div class="column-sm-3 albumview-column">
+                <a href="https://reddit.com/r/all">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">Mac</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/McMaster_University_logo.svg/1280px-McMaster_University_logo.svg.png" class="albumview-album-img">
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="column-sm-3 albumview-column">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">U of T</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/UofT_Logo.svg/1280px-UofT_Logo.svg.png" class="albumview-album-img">
+                    </div>
+                </div>
+            </div>
+            <div class="column-sm-3 albumview-column">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">UWaterloo</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img src="https://uwaterloo.ca/brand/sites/ca.brand/files/resize/uploads/images/universityofwaterloo_logo_horiz_rgb_0-300x120.png" class="albumview-album-img">
+                    </div>
+                </div>
+            </div>
+            <div class="column-sm-3 albumview-column">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">McGill</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img src="http://royalvictoria.mcgill.ca/wp-content/uploads/2014/02/logo_video.png" class="albumview-album-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row albumview-row">
+            <div class="column-sm-3 albumview-column">
+                <a href="https://reddit.com/r/all">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">UBC</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img src="http://bcinclusivelearning.com/wp-content/uploads/2016/01/ubc_3.png" class="albumview-album-img">
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+        <div class="row albumview-row" ng-repeat="album_row in albums track by $index">
+            <div class="column-sm-3 albumview-column" ng-repeat="album in album_row track by $index">
+                <a ng-href="{{album.link}}">
+                <div class="albumview-album">
+                    <p class="albumview-album-name">{{album.name}}</p>
+                    <div class="albumview-album-img-wrapper">
+                        <img ng-src="{{album.init_message}}" class="albumview-album-img">
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
 </div>
 {% endblock %}

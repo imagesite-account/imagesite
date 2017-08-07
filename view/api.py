@@ -61,6 +61,9 @@ class InterimMessagesContent(object):
     def __init__(self, messages):
         self.messages = messages
 
+##############################################
+# API/JSON Methods
+
 
 def api_get_album(request, album_id):
 
@@ -75,7 +78,51 @@ def api_get_album(request, album_id):
     return JSONResponse(serializer.data)
 
 
+def api_get_all_album(request):
+    album_list = []
+    try:
+        album_list = ViewData.objects.all()
+    except Exception as ex:
+        pass
+
+    serializer = ViewDataSerializer(album_list, many=True)
+
+    return JSONResponse(serializer.data)
+
+##############################################
+# non-API/JSON Methods
+
+
+# def get_all_album_basic_formatted(request, nxm_format):
+#     # album_list = []
+#     # try:
+#     #     album_list = [album.get_basic_info() for album in ViewData.objects.all()]
+#     #     print('[view/api.py/get_all_album]: Album_list', album_list)
+#     # except Exception as ex:
+#     #     print('[view/api.py/get_all_album] Error retrieving album list:',)
+#     #     print(ex)
+#     #     return None
+#     #
+#     # if nxm_format is None:
+#     #     pass
+#     # elif isinstance(nxm_format, int):
+#     #     album_list_ = []
+#     #
+#     #     for i, album in enumerate(album_list):
+#     #         k = i // nxm_format
+#     #         if i % nxm_format == 0:
+#     #             album_list_.append([])
+#     #         album_list_[k].append(album)
+#     #         print('[view/api.py/get_all_album]: Album', album)
+#     #
+#     #         album_list = album_list_
+#     #
+#     # print('[view/api.py/get_all_album]: Album_list', album_list)
+#     # # print(album_list)
+#
+#     return album_list
 ################################
+
 
 @csrf_exempt
 def api_submit_rating(request, album_id): # album_id, rating in request
@@ -106,7 +153,6 @@ def api_submit_rating(request, album_id): # album_id, rating in request
     rating = req_dict['rating']
 
     image_id = format_id(image_id)
-
 
     print(image_id, rating)
 

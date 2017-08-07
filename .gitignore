@@ -1,4 +1,6 @@
 key.txt
 keys-imgur.txt
 db.sqlite3
+aid.sqlite3
+*.sqlite3
 sandbox.py

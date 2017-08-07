@@ -12,6 +12,8 @@ from master import format_id
 EMPTY_ALBUM_KEY = '__empty_album__'
 
 
+# http://imgur.com/a/NbU05, http://imgur.com/a/fdPFE, http://imgur.com/a/S7Ixt
+
 def get_client():
     imgur_key_file = 'keys-imgur.txt'
     with open(imgur_key_file) as f:

@@ -25,7 +25,15 @@
     <script>
         global_current_host = '{{global_current_host}}';
         album_id = '{{album_id}}';
+//        albums = {{albums}};
+        contact = 'Contact: ' + '{{contact}}';
+//        contact = 'Contact: ' + 'your.email@domain.com';
     </script>
+    <script> 
+        $(function(){
+            $("#footer").load("{% static 'html/footer.html' %}");
+        });
+    </script> 
 
     {% block app-js %}
     {% endblock %}
@@ -34,6 +42,8 @@
 <body>                                                                    
     {% block app-html %}
     {% endblock %}
+    
+    <div id="footer"></div>
 </body>
 
 </html>
