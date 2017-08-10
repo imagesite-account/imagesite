@@ -52,12 +52,13 @@ class ViewData(models.Model):
     _DATABASE = 'default'
 
     def __str__(self):
-        return self.name
+        return self.name if self.name else self.album_id
 
-    def get_image_list(self):
-        # Randomize viewing order?
+    def get_image_list(self, shuffle_list=True):
         image_list = self.images.split(',')
-        shuffle(image_list)
+        # Randomize viewing order?
+        if shuffle_list:
+            shuffle(image_list)
         return image_list
 
     def get_labels(self):
@@ -78,7 +79,19 @@ class ViewData(models.Model):
 
         return info
 
+    def collect_data(self):
+        album_ratings = []
+        try:
+            with conns['album_image_data'].cursor() as c:
+                c.execute('''SELECT image_id, rating FROM {table_name}'''
+                          .format(table_name=self.album_id))
+                album_ratings = c.fetchall()
+                print(album_ratings)
+        except Exception as ex:
+            print('''[View/models.py/ViewData/collect_data]
+                  Error trying to collect data for model''', self.name, self.id)
 
+        return album_ratings
     class Meta:
         # Set managed = True
         # https://stackoverflow.com/a/35494384

@@ -16,7 +16,7 @@ def is_acceptable_char(character):
 
 
 def check_sql(table_name):
-    
+
     for character in table_name:
         if not is_acceptable_char(character):
             raise ValueError('Invalid table name: contains character:', character)

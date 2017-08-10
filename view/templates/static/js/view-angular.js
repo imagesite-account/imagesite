@@ -50,6 +50,7 @@ app.controller('viewController', function($scope, $http) {
       // $scope.labels = $scope.all['labels'];
       // alert('Inside api call:' + $scope.images);
       $scope.viewImg = $scope.initImg();
+      alert($scope.images);
   });
   // alert('Outside api call:' + $scope.images);
   image_counter = 0;
@@ -69,7 +70,7 @@ app.controller('viewController', function($scope, $http) {
     var interim_submission = {'rating': rating, 'image_id': $scope.images[image_counter-1], }
 
 
-    if (image_counter < $scope.images.length - 1){
+    if (image_counter < $scope.images.length){
       $http({
           url: $scope.api_submit_url,
           method: 'POST',
@@ -93,7 +94,7 @@ app.controller('viewController', function($scope, $http) {
       // alert(JSON.stringify($scope.interim_response));
       $scope.viewImg = $scope.images[image_counter];
       $scope.disp_message = $scope.messages.default;
-    }else if (image_counter === $scope.images.length - 1){
+    }else if (image_counter === $scope.images.length){
       $scope.viewImg = endscreen_link;
       $http({
           url: $scope.api_submit_url,
