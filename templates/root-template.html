@@ -29,11 +29,13 @@
         contact = 'Contact: ' + '{{contact}}';
 //        contact = 'Contact: ' + 'your.email@domain.com';
     </script>
+<!--
     <script> 
         $(function(){
             $("#footer").load("{% static 'html/footer.html' %}");
         });
     </script> 
+-->
 
     {% block app-js %}
     {% endblock %}
@@ -43,7 +45,7 @@
     {% block app-html %}
     {% endblock %}
     
-    <div id="footer"></div>
+    
 </body>
 
 </html>

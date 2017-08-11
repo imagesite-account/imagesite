@@ -11,7 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from .models import ViewData, create_or_get_model
 from .serializers import ViewDataSerializer, InterimMessagesSerializer
 
-from master import check_sql, format_id
+from master import check_sql, format_id, filter_list
 
 
 def process_request(request):
@@ -81,7 +81,7 @@ def api_get_album(request, album_id):
 def api_get_all_album(request):
     album_list = []
     try:
-        album_list = ViewData.objects.all()
+        album_list = ViewData.objects.exclude(album_id__in=filter_list)
     except Exception as ex:
         pass
 
@@ -131,6 +131,8 @@ def api_submit_rating(request, album_id): # album_id, rating in request
 
     # image_id = request.POST.get('image_id', 'Empty')
     # rating = request.POST.get('rating', '-1')
+
+
     #
     if not request.POST.dict().items():
         message_dict = {'success': success, 'image': '',
@@ -155,6 +157,15 @@ def api_submit_rating(request, album_id): # album_id, rating in request
     image_id = format_id(image_id)
 
     print(image_id, rating)
+
+    if album_id in filter_list:
+        message_dict = {'success': success, 'image': image_id,
+                        'additional_message': 'Album not currently allowing ratings.'}
+        im_data = InterimMessagesContent(message_dict)
+        serializer = InterimMessagesSerializer(im_data)
+        print(serializer.data)
+
+        return JSONResponse(serializer.data)
 
     # if album_id != album_id_:
     #     # Return "failed"

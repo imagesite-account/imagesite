@@ -1,13 +1,28 @@
+'''
+When adding a new album ensure that album_id, name and init_message are correct
+(or None if prefer not to use them)
+
+When modifying an existing album ensure album_id exists and is correct, and fields that
+should not be changed are None. To add/remove images from album, add/remove the images
+from the imgur album then simply set the album_id to that album and set everything else
+to None, then run python3 album.py modify.
+
+See the instructions.pdf for more info.
+'''
 
 values_dict = {
+
+
     # Required fields:
-    'album_id': 'fdPFE',
+    'album_id': 'http://imgur.com/a/6P9t3',
 
     # Optional (important) fields:
-    'name': 'UWaterloo',
-    'init_message': 'https://uwaterloo.ca/brand/sites/ca.brand/files/resize/uploads/images/universityofwaterloo_logo_horiz_rgb_0-300x120.png',	# The 'initial picture' of the album people see when visiting homepage
-	
-	# Optional (unimportant) fields (do not modify these unless you have good reason)
+    'name': 'haveaday',
+    'init_message': # The 'initial picture' of the album people see when visiting homepage
+        'http://i.imgur.com/JVhs653.jpg',
+
+
+    # Optional (unimportant) fields (do not modify these unless you have good reason)
     'version': 0,
     'tags': (None,),
     'owner': None,

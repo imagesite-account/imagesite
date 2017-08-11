@@ -1,23 +1,23 @@
-{% extends 'view-wrapper.html' %}
-
-{% load staticfiles %}
-
-{% block body %}
+{% extends 'view-wrapper.html' %} {% load staticfiles %} {% block body %}
 <!--<div>Atom is a great text editor!</div>-->
 <!--https://stackoverflow.com/questions/20312922/change-image-src-based-on-ng-click-index-angularjs-->
 <div class="content-wrapper">
-<!--    {{album_id}}-->
+    <!--    {{album_id}}-->
     {% verbatim %}
     
-        <div class="imageview" ng-app="viewApp" ng-controller="viewController">
-<!--            {{all}}-->
-<!--            {{api_url}}-->
-<!--            {{images}}-->
-            <div class="imageview-hero"><img ng-src="{{viewImg}}" alt="Hello World!"></div>
-            <div class="imageview-description">{{disp_message}}</div>
-            <form novalidate>
-                <div class="row">
-<!--
+
+    <div class="imageview" ng-app="viewApp" ng-controller="viewController">
+        <div class="home-btn-wrapper">
+            <a href="/"><button class="btn btn-secondary btn-home" type="button">Home</button></a>
+        </div>
+        <!--            {{all}}-->
+        <!--            {{api_url}}-->
+        <!--            {{images}}-->
+        <div class="imageview-hero"><img ng-src="{{viewImg}}" alt="Hello World!"></div>
+        <div class="imageview-description">{{disp_message}}</div>
+        <form novalidate>
+            <div class="row">
+                <!--
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary" ng-repeat="label in labels track by $index">
                             {{image.rating}}
@@ -25,51 +25,61 @@
                         </label>
                     </div>
 -->
-                    <div class="btn-group">
-                        <label class="btn btn-primary">
+                <div class="btn-group">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option1" ng-model="image.rating" ng-value="1"> 1
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option2" ng-model="image.rating" ng-value="2"> 2
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option3" ng-model="image.rating" ng-value="3"> 3
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option4" ng-model="image.rating" ng-value="4"> 4
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option5" ng-model="image.rating" ng-value="5"> 5
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option6" ng-model="image.rating" ng-value="6"> 6
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option7" ng-model="image.rating" ng-value="7"> 7
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option8" ng-model="image.rating" ng-value="8"> 8
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option9" ng-model="image.rating" ng-value="9"> 9
       </label>
-                        <label class="btn btn-primary">
+                    <label class="btn btn-primary">
         <input type="radio" name="options" id="option10" ng-model="image.rating" ng-value="10"> 10
       </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="input-group-btn">
+                        <button id="button-submit" class="btn btn-secondary" type="button" ng-click="submit()">Submit</button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 text-center"> 
-                    <div class="input-group-btn">
-        <button class="btn btn-secondary" type="button" ng-click="submit()">Submit</button>
-      </div>
-                </div>
-                </div>
-                <br>
+            </div>
+            <br>
 
-            </form>
-<!--            <pre>ratings = {{image.rating | json}}</pre>-->
+        </form>
+        <!--            <pre>ratings = {{image.rating | json}}</pre>-->
+<!--
+        <div class="row">
+            <div class="col-md-1">
+                <a href="/"><button class="btn btn-secondary pull-left" type="button">Home</button></a>
+            </div>
         </div>
-    {% endverbatim %}
+-->     
+        
+        
     </div>
+    
+    {% endverbatim %}
+</div>
 {% endblock %}

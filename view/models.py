@@ -1,9 +1,11 @@
 from random import shuffle
 
 from django.db import models
+from django.db.utils import OperationalError
 from django.utils import timezone
 from django.apps import apps
 
+from master import owner
 # Create your models here.
 
 # Model for view database, containing references to all albums:
@@ -31,7 +33,7 @@ class ViewData(models.Model):
     tags = models.TextField(blank=True, null=True, default='')
     date_created = models.DateTimeField(blank=True, null=True, default=timezone.now)
     date_modified = models.DateTimeField(blank=True, null=True, default=timezone.now)
-    owner = models.TextField(blank=True, null=True, default='')
+    owner = models.TextField(blank=True, null=True, default=owner)
     num_labels = models.IntegerField(blank=True, null=True, default=0)
 
     # rating_0 = models.IntegerField(blank=True, null=True)
@@ -83,15 +85,34 @@ class ViewData(models.Model):
         album_ratings = []
         try:
             with conns['album_image_data'].cursor() as c:
-                c.execute('''SELECT image_id, rating FROM {table_name}'''
+                c.execute('''SELECT image_id, rating FROM [{table_name}]'''
                           .format(table_name=self.album_id))
                 album_ratings = c.fetchall()
                 print(album_ratings)
         except Exception as ex:
             print('''[View/models.py/ViewData/collect_data]
-                  Error trying to collect data for model''', self.name, self.id)
+                  Error trying to collect data for model''', self.name, self.album_id)
 
         return album_ratings
+
+    def delete(self, *args, **kwargs):
+        
+        try:
+            with conns['album_image_data'].cursor() as c:
+                c.execute('''DROP TABLE [{table_name}];
+                    '''.format(table_name=self.album_id))
+        except OperationalError as oe:
+            print('''[View/models.py/ViewData/delete]
+                  Error trying to delete model''', self.name, self.album_id)
+            print(oe)
+            print('''If the error is "no such table", it is possible that
+                     no ratings were ever submitted for the table.
+                     In this case the error is nothing to worry about.''')
+            return None
+
+                
+        return super(ViewData, self).delete(*args, **kwargs)
+
     class Meta:
         # Set managed = True
         # https://stackoverflow.com/a/35494384
@@ -129,7 +150,7 @@ def create_or_get_model(album_id):
         # Or everything fails.
         album_id = check_sql(album_id)
         with conns['album_image_data'].cursor() as c:
-            c.execute('''CREATE TABLE IF NOT EXISTS {table_name}
+            c.execute('''CREATE TABLE IF NOT EXISTS [{table_name}]
                         (rating INT, datetime TEXT, image_id TEXT, extra TEXT)
                         '''
                       .format(table_name=album_id))

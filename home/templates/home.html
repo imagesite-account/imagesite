@@ -12,6 +12,7 @@
             <h3>Select a set of images to rate below.</h3>
         </div>
 <!--        http://imgur.com/a/yfwjZ-->
+<!--
         <div class="row albumview-row">
             <div class="column-sm-3 albumview-column">
                 <a href="https://reddit.com/r/all">
@@ -60,6 +61,7 @@
                 </a>
             </div>
         </div>
+-->
         <div class="row albumview-row" ng-repeat="album_row in albums track by $index">
             <div class="column-sm-3 albumview-column" ng-repeat="album in album_row track by $index">
                 <a ng-href="{{album.link}}">
@@ -74,5 +76,20 @@
         </div>
     </div>
     {% endverbatim %}
+</div>
+
+<script>
+//contact = 'Contact: ' + 'your.email@domain.com'
+//window.onload = function() {
+//   document.getElementById("footer-info").innerHTML = contact;
+//}
+    window.onload = function() {
+        $("#footer-info").html(contact);
+    }
+</script>
+
+<div class="footer-wrapper">
+    <span class="footer-line"></span>
+    <p id="footer-info" class="footer-info"></p>
 </div>
 {% endblock %}

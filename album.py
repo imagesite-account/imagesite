@@ -9,7 +9,7 @@ import django
 django.setup()
 from view.models import ViewData, create_or_get_model
 
-from master import format_id
+from master import format_id, filter_list
 from set_album_values import values_dict as vd
 
 EMPTY_ALBUM_KEY = '__empty_album__'
@@ -74,8 +74,7 @@ if __name__ == '__main__':
         owner = vd['owner'] if isinstance(vd['owner'], str) else ''
         init_message = vd['init_message'] if isinstance(vd['init_message'], str) \
             else 'http://i.imgur.com/IaXTuHx.png'
-                
-        
+
         url = 'https://imgur.com/a/%s' % str(album_id)
 
         try:
@@ -147,15 +146,6 @@ if __name__ == '__main__':
             print('Album %s does not exist; please add it first.' % album_id)
             print('Exiting...')
             quit()
-##        A = create_or_get_model(album_id)
-##        if A is None:
-##            print('[album.py] Error occured trying to create or get model for album_id:', album_id)
-##            quit()
-##        all_ratings = A.objects.filter(rating=7)
-##        # print(rating)
-##        
-##        for rating in all_ratings:
-##            print(rating)
         
         a = ViewData.objects.get(album_id=album_id)
         album_ratings = a.collect_data()
@@ -170,23 +160,27 @@ if __name__ == '__main__':
                 print(''' [album.py]
                       Error trying to convert rating in album
                       %s for image %s: rating %s''' % (album_id, image, rating))
+                print(ve)
                 continue
             
-            if image in image_dict:
+            if image in image_dict and 1 <= rating <= 10:
                 image_dict[image][rating] += 1
-            else:
+            elif 1 <= rating <= 10:
                 print(''' [album.py]
                       Warning: Unknown image in %s: %s''' % (album_id, image))
+            else:
+                # Ignore all other rating values (this should never occur)
+                continue
 
         with open('data/%s_data.csv' % (album_id,), 'w', newline='') as csvfile:
             album_writer = csv.writer(csvfile, delimiter=',')
             album_writer.writerow(
-                ['image_id',] + ['r_%d' % rating for rating in range(1, 11)] + \
+                ['image_id',] + ['r_%d' % rating for rating in range(1, 11)] +
                     ['r_total',]
             )
             for image, rating_dict in image_dict.items():
                 album_writer.writerow(
-                    [image,] + [number for rating, number in rating_dict.items()] + \
+                    [image,] + [number for rating, number in rating_dict.items()] +
                         [sum([number for rating, number in rating_dict.items()]),]
                 )
                 print(image)
@@ -194,9 +188,50 @@ if __name__ == '__main__':
                     print(rating, number)
 
         print('Successfully collected data for %s' % album_id)
-            
+        
+    def delete_data(album_id):
+        album_id=format_id(album_id)
+        album_exists = ViewData.objects.filter(album_id=album_id).exists() \
+                       if isinstance(album_id, str) else False
+        
+        if not album_exists:
+            print('Album %s does not exist.' % album_id)
+            print('Exiting...')
+            quit()
+
+        a = ViewData.objects.get(album_id=album_id)
+        prompt = input('''Please retype the album id of the album
+                        you wish to delete: ''')
+        if prompt == album_id:
+            prompt = input('''Are you sure you want to delete all data
+                        associated with this album? 
+                        If you only want the album to stop appearing on the homepage,
+                        add the album to the filter_list instead
+                        (see documentation for more info).
+
+                        If you are certain you want to delete all data,
+                        associated with this album, enter "Y". Note that this operation
+                        cannot be undone, and the data cannot be recovered. \n''')
+
+            if prompt == 'Y':
+                r = a.delete()
+                if r:
+                    a.save()
+                    print('[album.py] Successfully deleted data for', album_id)
+                else:
+                    print('[album.py] Could not delete data for', album_id)
+            else:
+                print('Aborting deletion of', album_id)
+        else:
+            print('Incorrect album id. Aborting deletion.')
+        
+                            
     if sys.argv[1] == 'add':
-        add_album()
+        if len(sys.argv) == 2:
+            add_album()
+        else:
+            print('\nTo add an album, modify set_album_values.py, then run python3 album.py add; '
+                  'an album cannot be added from command line only.\n')
     elif sys.argv[1] == 'update':
         modify_album()
     elif sys.argv[1] == 'collect':
@@ -205,4 +240,11 @@ if __name__ == '__main__':
                   Not arguments enough for "collect": must provide album_id.''')
             quit()
         collect_data(sys.argv[2])
-    
+    elif sys.argv[1] == 'delete':
+        print('Command line full delete operation not currently supported.')
+##        if len(sys.argv) < 3:
+##            print('''[album.py]
+##                  Not arguments enough for "delete": must provide album_id.''')
+##            quit()
+##        delete_data(sys.argv[2])
+

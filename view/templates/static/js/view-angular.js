@@ -50,7 +50,7 @@ app.controller('viewController', function($scope, $http) {
       // $scope.labels = $scope.all['labels'];
       // alert('Inside api call:' + $scope.images);
       $scope.viewImg = $scope.initImg();
-      alert($scope.images);
+      // alert($scope.images);
   });
   // alert('Outside api call:' + $scope.images);
   image_counter = 0;
@@ -86,6 +86,7 @@ app.controller('viewController', function($scope, $http) {
             // alert('success');
             image_counter++;
           }else{
+            // alert(JSON.stringify($scope.interim_response['messages']));
             $scope.messages.custom = $scope.interim_response['messages']['additional_message'];
             $scope.disp_message = $scope.messages.custom;
           }
@@ -95,6 +96,7 @@ app.controller('viewController', function($scope, $http) {
       $scope.viewImg = $scope.images[image_counter];
       $scope.disp_message = $scope.messages.default;
     }else if (image_counter === $scope.images.length){
+      // alert('Last Image ' + image_counter + ' ' + $scope.images.length);
       $scope.viewImg = endscreen_link;
       $http({
           url: $scope.api_submit_url,
@@ -111,10 +113,13 @@ app.controller('viewController', function($scope, $http) {
             // alert('success');
             image_counter++;
           }else{
+            // alert('Unsuccessful in submitting rating');
             $scope.messages.custom = $scope.interim_response['messages']['additional_message'];
             $scope.disp_message = $scope.messages.custom;
           }
       });
+      image_counter++;
+      $scope.viewImg = endscreen_link;
       $scope.disp_message = $scope.messages.end;
     }else{
       image_counter++;
@@ -133,7 +138,9 @@ app.controller('viewController', function($scope, $http) {
     if ($scope.image.rating === false){
       $scope.disp_message = $scope.messages.norating;
     }else{
+      document.getElementById("button-submit").disabled = true;
       $scope.nextImg($scope.image.rating);
+      document.getElementById("button-submit").disabled = false;
 
       $scope.image.rating = false;
     }

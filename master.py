@@ -1,3 +1,4 @@
+from userdata import *
 
 
 GLOBAL_CURRENT_HOST = 'http://127.0.0.1:8000'
@@ -7,8 +8,6 @@ IMAGE_ERR_CODES = {
     1: 'Unable to save rating to db. Please try resubmitting.'
 }
 
-contact = 'your.email@domain.com'
-
 
 acceptable_chars = '[]_-'
 def is_acceptable_char(character):
@@ -16,7 +15,9 @@ def is_acceptable_char(character):
 
 
 def check_sql(table_name):
-    
+    if 'drop ' in table_name.lower():
+        raise ValueError('Invalid table name')
+
     for character in table_name:
         if not is_acceptable_char(character):
             raise ValueError('Invalid table name: contains character:', character)
