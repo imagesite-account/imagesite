@@ -14,7 +14,7 @@ values_dict = {
 
 
     # Required fields:
-    'album_id': 'http://imgur.com/a/6P9t3',
+    'album_id': 'NbU05', #ex. NbU05
 
     # Optional (important) fields:
     'name': 'haveaday',
